@@ -1,3 +1,4 @@
+// Récupérer les données du stockage local
 document.addEventListener("DOMContentLoaded", () => {
   const savedTasks = localStorage.getItem("tasks");
   if (savedTasks) {
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// Supprimer toutes les données du stockage local
 const resetButton = document.getElementById("resetButton");
 resetButton.addEventListener("click", function () {
   localStorage.removeItem("tasks");
@@ -30,9 +32,11 @@ resetButton.addEventListener("click", function () {
   taskList.innerHTML = "";
 });
 
+// Ajouter une tâche à la liste en appuyant sur le bouton "Ajouter"
 const buttonAddTask = document.getElementById("buttonAddTask");
 buttonAddTask.addEventListener("click", addTask);
 
+// Ajouter une tâche à la liste en appuyant sur Entrée
 const taskInput = document.getElementById("taskInput");
 taskInput.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
@@ -48,6 +52,7 @@ function addTask() {
     const newTask = document.createElement("li");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    // TODO : Faire en sort que le li aille dans le ul des taches terminées
     checkbox.addEventListener("change", function () {
       if (checkbox.checked) {
         newTask.style.textDecoration = "line-through";
