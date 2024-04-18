@@ -5,9 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const tasks = JSON.parse(savedTasks);
 
     const taskList = document.getElementById("taskList");
-    tasks.forEach((task) => {
+    tasks.forEach((task, index) => {
       const newTask = document.createElement("li");
       const checkbox = document.createElement("input");
+      const line = document.createElement("div");
+      line.className = "line";
       checkbox.type = "checkbox";
       checkbox.addEventListener("change", function () {
         if (checkbox.checked) {
@@ -16,6 +18,27 @@ document.addEventListener("DOMContentLoaded", () => {
           newTask.style.textDecoration = "none";
         }
       });
+      newTask.style.opacity = 0;
+      newTask.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 1000,
+        fill: "forwards",
+        delay: index * 300,
+      });
+      newTask.animate(
+        [{ transform: "translateX(-5%)" }, { transform: "translateX(0%)" }],
+        { duration: 1000, fill: "forwards", easing: "ease", delay: index * 300 }
+      );
+      line.style.width = "0%";
+      line.animate([{ width: "0%" }, { width: "100%" }], {
+        duration: 1000,
+        fill: "forwards",
+        easing: "ease-in-out",
+        delay: index * 300,
+      });
+
+      if (index !== 0) {
+        taskList.appendChild(line);
+      }
 
       newTask.textContent = task;
       newTask.appendChild(checkbox);
@@ -51,6 +74,8 @@ function addTask() {
   if (taskInput.value.trim() !== "") {
     const newTask = document.createElement("li");
     const checkbox = document.createElement("input");
+    const line = document.createElement("div");
+    line.className = "line";
     checkbox.type = "checkbox";
     // TODO : Faire en sort que le li aille dans le ul des taches terminées
     checkbox.addEventListener("change", function () {
@@ -62,6 +87,24 @@ function addTask() {
     });
 
     newTask.textContent = taskInput.value;
+
+    newTask.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: 1000,
+      fill: "forwards",
+    });
+    newTask.animate(
+      [{ transform: "translateX(-5%)" }, { transform: "translateX(0%)" }],
+      { duration: 1000, fill: "forwards", easing: "ease" }
+    );
+    line.animate([{ width: "0%" }, { width: "100%" }], {
+      duration: 1000,
+      fill: "forwards",
+      easing: "ease-in-out",
+    });
+    if (taskList.firstChild !== null) {
+      taskList.appendChild(line);
+    }
+
     newTask.appendChild(checkbox);
     taskList.appendChild(newTask);
     taskInput.value = "";
