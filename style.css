@@ -16,6 +16,7 @@ body {
   position: absolute;
   top: 20px;
   right: 20px;
+  width: 200px;
 }
 
 h1 {
@@ -73,6 +74,10 @@ button:hover {
   color: #ead8c0;
 }
 
+#buttonAddTask {
+  margin-right: 25px;
+}
+
 #underlineInput {
   width: 480px;
   height: 2px;
@@ -104,7 +109,7 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 50px 0 50px 25px;
+  padding: 50px 25px;
   /* border-bottom: 2px solid #0f0f0f; */
 }
 
