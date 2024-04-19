@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const taskList = document.getElementById("taskList");
     tasks.forEach((task, index) => {
+      // TODO : créer une fonction pour ajouter une tâche à la liste
       const newTask = document.createElement("li");
       const checkbox = document.createElement("input");
       const line = document.createElement("div");
@@ -48,6 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Supprimer toutes les données du stockage local
+// TODO : Faire en sorte que le bouton "Réinitialiser" demande une confirmation avant de supprimer les tâches
+// TODO : Faire en sorte que le bouton "Réinitialiser" supprime également les tâches terminées
+// TODO : Faire une animation pour la suppression des tâches
 const resetButton = document.getElementById("resetButton");
 resetButton.addEventListener("click", function () {
   localStorage.removeItem("tasks");
@@ -73,20 +77,56 @@ function addTask() {
 
   if (taskInput.value.trim() !== "") {
     const newTask = document.createElement("li");
-    const checkbox = document.createElement("input");
+    const text = document.createElement("p");
+    const checkbox = document.createElement("button");
     const line = document.createElement("div");
+    const strike = document.createElement("div");
+    newTask.className = "task";
     line.className = "line";
-    checkbox.type = "checkbox";
+    strike.className = "line";
+    strike.id = "strike";
+    console.log("marque");
+    checkbox.textContent = "Fait";
     // TODO : Faire en sort que le li aille dans le ul des taches terminées
-    checkbox.addEventListener("change", function () {
-      if (checkbox.checked) {
-        newTask.style.textDecoration = "line-through";
+    checkbox.addEventListener("click", function () {
+      if (newTask.classList.contains("task")) {
+        text.animate([{ opacity: 1 }, { opacity: 0.5 }], {
+          duration: 1000,
+          fill: "forwards",
+        });
+        strike.animate([{ width: "0%" }, { width: "80%" }], {
+          duration: 1000,
+          fill: "forwards",
+          easing: "ease-in-out",
+        });
+        strike.animate([{ opacity: 1 }, { opacity: 0.5 }], {
+          duration: 1000,
+          fill: "forwards",
+        });
+        checkbox.textContent = "Annuler";
+        newTask.classList.remove("task");
+        newTask.classList.add("taskDone");
       } else {
-        newTask.style.textDecoration = "none";
+        text.animate([{ opacity: 0.5 }, { opacity: 1 }], {
+          duration: 1000,
+          fill: "forwards",
+        });
+        strike.animate([{ width: "80%" }, { width: "0%" }], {
+          duration: 1000,
+          fill: "forwards",
+          easing: "ease-in-out",
+        });
+        strike.animate([{ opacity: 0.5 }, { opacity: 1 }], {
+          duration: 1000,
+          fill: "forwards",
+        });
+        checkbox.textContent = "Fait";
+        newTask.classList.remove("taskDone");
+        newTask.classList.add("task");
       }
     });
 
-    newTask.textContent = taskInput.value;
+    text.textContent = taskInput.value;
 
     newTask.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 1000,
@@ -105,25 +145,34 @@ function addTask() {
       taskList.appendChild(line);
     }
 
+    newTask.appendChild(text);
     newTask.appendChild(checkbox);
     taskList.appendChild(newTask);
+    taskList.appendChild(strike);
     taskInput.value = "";
-
-    saveTasksToLocalStorage();
   }
 }
 
+window.addEventListener("beforeunload", function () {
+  saveTasksToLocalStorage();
+});
+
 function saveTasksToLocalStorage() {
   const tasks = [];
+  const tasksDone = [];
 
   // Récupérer toutes les tâches de la liste
   const taskItems = document.querySelectorAll("#taskList li");
   taskItems.forEach((task) => {
-    tasks.push(task.textContent);
+    if (task.classList.contains("task")) {
+      tasks.push(task.textContent);
+    } else {
+      tasksDone.push(task.textContent);
+    }
   });
 
-  // Enregistrer les tâches au format JSON dans le stockage local
   localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("tasksDone", JSON.stringify(tasksDone));
 }
 
 const underlineInput = document.getElementById("underlineInput");
